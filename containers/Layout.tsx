@@ -20,6 +20,9 @@ const LayoutContainer: React.FC<Props> = ({ children }) => {
           <Menu.Item key={"/projects"}>
             <Link href="/projects">Projects</Link>
           </Menu.Item>
+          <Menu.Item key={"/submissions"}>
+            <Link href="/submissions">Submissions</Link>
+          </Menu.Item>
         </Menu>
       </Header>
       <Content>{children}</Content>

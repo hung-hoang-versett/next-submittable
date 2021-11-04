@@ -1,9 +1,8 @@
 import React from "react";
 import { GetServerSideProps } from "next";
 import { getProjects } from "pages/api/submittable/projects";
-import { List, Space } from "antd";
+import { List, Space, PageHeader } from "antd";
 import { BarsOutlined } from "@ant-design/icons";
-
 interface Props {
   projects: any;
 }
@@ -14,19 +13,14 @@ const IconText = ({ icon, text }: any) => (
   </Space>
 );
 const ProjectsPage: React.FC<Props> = ({ projects }) => {
-  console.log("projects", projects);
   const { items } = projects;
+  console.log("items", items);
   return (
     <div>
+      <PageHeader className="site-page-header" title="Projects" />
       <List
         itemLayout="vertical"
         size="large"
-        pagination={{
-          onChange: (page) => {
-            console.log(page);
-          },
-          pageSize: 20,
-        }}
         dataSource={items}
         renderItem={(item: any) => (
           <List.Item
@@ -34,13 +28,17 @@ const ProjectsPage: React.FC<Props> = ({ projects }) => {
             actions={[
               <IconText
                 icon={BarsOutlined}
-                text={`Total fields:`}
+                text={`Total review stages: ${item.reviewStages.length}`}
                 key="list-vertical-star-o"
               />,
             ]}
           >
             <List.Item.Meta title={item.name} description={item.description} />
-            {item.content}
+            <Space>
+              <div
+                dangerouslySetInnerHTML={{ __html: item.guidelinesHtml }}
+              ></div>
+            </Space>
           </List.Item>
         )}
       />
