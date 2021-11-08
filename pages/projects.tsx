@@ -14,7 +14,6 @@ const IconText = ({ icon, text }: any) => (
 );
 const ProjectsPage: React.FC<Props> = ({ projects }) => {
   const { items } = projects;
-  console.log("items", items);
   return (
     <div>
       <PageHeader className="site-page-header" title="Projects" />

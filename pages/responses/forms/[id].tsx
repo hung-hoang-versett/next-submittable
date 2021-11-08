@@ -1,9 +1,8 @@
 import React from "react";
 import { GetServerSideProps } from "next";
 import { getFormResponses } from "pages/api/submittable/responses/form";
-import { Typography, List, Divider, Descriptions, PageHeader } from "antd";
+import { List, Divider, Descriptions, PageHeader } from "antd";
 import { useRouter } from "next/router";
-import moment from "moment";
 interface Props {
   responses: any;
 }
@@ -55,7 +54,6 @@ const FormResponsesPage: React.FC<Props> = ({ responses }) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const id = context.params?.id || "";
   const { data } = await getFormResponses(id.toString());
-  console.log("data", data);
   if (!data)
     return {
       notFound: true,

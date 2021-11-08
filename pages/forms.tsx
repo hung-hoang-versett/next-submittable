@@ -45,6 +45,14 @@ const FormsPage: React.FC<Props> = ({ forms }) => {
               >
                 Responses
               </Button>,
+              <Button
+                type="link"
+                icon={<LinkOutlined />}
+                key={`${item.submissionId}-form`}
+                onClick={() => router.push(`forms/${item.formId}`)}
+              >
+                Builder
+              </Button>,
             ]}
           >
             <List.Item.Meta
