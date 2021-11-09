@@ -9,6 +9,9 @@ import React from "react";
 import { Registry } from "react-form-builder2";
 import TextOnly from "components/formBuilder/textOnly";
 import SingleCheckbox from "components/formBuilder/singleCheckbox";
+import LongAnswer from "components/formBuilder/longAnswer";
+import Table from "components/formBuilder/table";
+
 const customComponentsBuilder = Registry.list() as any[];
 const components = [
   {
@@ -18,6 +21,14 @@ const components = [
   {
     key: "SingleCheckbox",
     component: SingleCheckbox,
+  },
+  {
+    key: "LongAnswer",
+    component: LongAnswer,
+  },
+  {
+    key: "Table",
+    component: Table,
   },
 ];
 components.forEach(

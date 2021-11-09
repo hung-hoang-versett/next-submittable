@@ -1,5 +1,8 @@
 import { DropdownListOption, Field } from "./type";
-export const convertFormJsonSubmittableToReactForm = (fields: Field[]) => {
+export const convertFormJsonSubmittableToReactForm = (
+  fields: Field[],
+  validateState?: any
+) => {
   const formatted = fields
     .filter((field) => {
       const { fieldType } = field;
@@ -15,9 +18,11 @@ export const convertFormJsonSubmittableToReactForm = (fields: Field[]) => {
         "name",
         "text_only",
         "single_checkbox",
+        "single_response",
+        "long_answer",
+        "table",
       ];
       if (validFields.includes(fieldType)) return true;
-      console.log("fieldType", fieldType);
       return validFields.includes(fieldType);
     })
     .map((field) => {
@@ -42,9 +47,17 @@ export const convertFormJsonSubmittableToReactForm = (fields: Field[]) => {
         case "multiple_response":
           return formatMultipleResponse(field);
         case "text_only":
-          return formatTextOnly(field);
+          return formatTextOnly(field, validateState);
         case "single_checkbox":
-          return formatSingleCheckbox(field);
+          return formatSingleCheckbox(field, validateState);
+        case "single_response":
+          return formatDropdown(field);
+        case "long_answer":
+          return formatLongAnswer(field, validateState);
+        case "table":
+          return formatTable(field);
+        // case "file_upload":
+        //   return formatDropdown(field);
         default:
           break;
       }
@@ -232,7 +245,10 @@ function formatMultipleResponse(field: Field) {
     text: "Checkboxes",
   };
 }
-function formatTextOnly(field: Field) {
+function formatTextOnly(field: Field, validateState?: any) {
+  const errors = validateState
+    ? validateState[`single_checkbox_${field.formFieldId}`]
+    : null;
   return {
     bold: false,
     // canHaveAlternateForm: true,
@@ -252,10 +268,14 @@ function formatTextOnly(field: Field) {
     required: field.isRequired,
     static: true,
     text: "Text Only",
-    textBlock: field.textBlock ? JSON.parse(field.textBlock) : {},
+    textBlock: field.textBlock ? JSON.parse(field.textBlock) : null,
+    errors,
   };
 }
-function formatSingleCheckbox(field: Field) {
+function formatSingleCheckbox(field: Field, validateState?: any) {
+  const errors = validateState
+    ? validateState[`single_checkbox_${field.formFieldId}`]
+    : null;
   return {
     bold: false,
     // canHaveAlternateForm: true,
@@ -272,5 +292,52 @@ function formatSingleCheckbox(field: Field) {
     required: field.isRequired,
     text: "Single checkbox",
     bare: true,
+    errors,
+  };
+}
+function formatLongAnswer(field: Field, validateState?: any) {
+  const errors = validateState
+    ? validateState[`long_answer_${field.formFieldId}`]
+    : null;
+
+  return {
+    bold: false,
+    // canHaveAlternateForm: true,
+    // canHaveDisplayHorizontal: true,
+    // canHaveOptionCorrect: true,
+    // canHaveOptionValue: true,
+    // canHavePageBreakBefore: true,
+    // canPopulateFromApi: true,
+    element: "CustomElement",
+    field_name: `long_answer_${field.formFieldId}`,
+    id: field.formFieldId,
+    key: "LongAnswer",
+    label: field.label,
+    required: field.isRequired,
+    text: "LongAnswer",
+    bare: false,
+    errors,
+  };
+}
+function formatTable(field: Field) {
+  return {
+    bold: false,
+    // canHaveAlternateForm: true,
+    // canHaveDisplayHorizontal: true,
+    // canHaveOptionCorrect: true,
+    // canHaveOptionValue: true,
+    // canHavePageBreakBefore: true,
+    // canPopulateFromApi: true,
+    element: "CustomElement",
+    field_name: `table_${field.formFieldId}`,
+    id: field.formFieldId,
+    key: "Table",
+    label: field.label,
+    required: field.isRequired,
+    text: "Table",
+    bare: false,
+    additionalInstructions: field.additionalInstructions
+      ? JSON.parse(field.additionalInstructions)
+      : null,
   };
 }
