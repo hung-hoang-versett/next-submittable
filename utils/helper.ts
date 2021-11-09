@@ -55,7 +55,7 @@ export const convertFormJsonSubmittableToReactForm = (
         case "long_answer":
           return formatLongAnswer(field, validateState);
         case "table":
-          return formatTable(field);
+          return formatTable(field, validateState);
         // case "file_upload":
         //   return formatDropdown(field);
         default:
@@ -246,9 +246,13 @@ function formatMultipleResponse(field: Field) {
   };
 }
 function formatTextOnly(field: Field, validateState?: any) {
-  const errors = validateState
-    ? validateState[`single_checkbox_${field.formFieldId}`]
-    : null;
+  const errors =
+    validateState && validateState[`text_only_${field.formFieldId}`]
+      ? validateState[`text_only_${field.formFieldId}`].replaceAll(
+          `text_only_${field.formFieldId}`,
+          field.label
+        )
+      : null;
   return {
     bold: false,
     // canHaveAlternateForm: true,
@@ -273,9 +277,13 @@ function formatTextOnly(field: Field, validateState?: any) {
   };
 }
 function formatSingleCheckbox(field: Field, validateState?: any) {
-  const errors = validateState
-    ? validateState[`single_checkbox_${field.formFieldId}`]
-    : null;
+  const errors =
+    validateState && validateState[`single_checkbox_${field.formFieldId}`]
+      ? validateState[`single_checkbox_${field.formFieldId}`].replaceAll(
+          `single_checkbox_${field.formFieldId}`,
+          field.label
+        )
+      : null;
   return {
     bold: false,
     // canHaveAlternateForm: true,
@@ -296,9 +304,13 @@ function formatSingleCheckbox(field: Field, validateState?: any) {
   };
 }
 function formatLongAnswer(field: Field, validateState?: any) {
-  const errors = validateState
-    ? validateState[`long_answer_${field.formFieldId}`]
-    : null;
+  const errors =
+    validateState && validateState[`long_answer_${field.formFieldId}`]
+      ? validateState[`long_answer_${field.formFieldId}`].replaceAll(
+          `long_answer_${field.formFieldId}`,
+          field.label
+        )
+      : null;
 
   return {
     bold: false,
@@ -319,7 +331,14 @@ function formatLongAnswer(field: Field, validateState?: any) {
     errors,
   };
 }
-function formatTable(field: Field) {
+function formatTable(field: Field, validateState?: any) {
+  const errors =
+    validateState && validateState[`table_${field.formFieldId}`]
+      ? validateState[`table_${field.formFieldId}`].replaceAll(
+          `table_${field.formFieldId}`,
+          field.label
+        )
+      : null;
   return {
     bold: false,
     // canHaveAlternateForm: true,
@@ -339,5 +358,6 @@ function formatTable(field: Field) {
     additionalInstructions: field.additionalInstructions
       ? JSON.parse(field.additionalInstructions)
       : null,
+    errors,
   };
 }
